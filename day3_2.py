@@ -52,7 +52,7 @@ with open('input.txt', 'r', encoding='utf-8') as f:
                 elif grid[i][j+1] == engine:
                     connected = (i, j+1)
                 
-                if connected[0] is not None and connected[1] is not None:
+                if all (connected):
                     # print(going_number)
                     # print(connected)
                     gears[connected].append(int(going_number))
