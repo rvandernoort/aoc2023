@@ -5,10 +5,7 @@ saved_scores = defaultdict(list)
 
 def lookup(scores):
     for score in reversed(scores.items()):
-        print(score)
-        print([ saved_scores[other] for other in score[1] if other is not None])
         saved_scores[score[0]] = sum([ saved_scores[other] for other in score[1] if other is not None]) + 1
-        print(saved_scores)
     return sum(saved_scores.values())
 
 with open('input.txt', 'r') as f:
@@ -27,7 +24,6 @@ with open('input.txt', 'r') as f:
         if i not in scores:
             scores[i].append(None)
     
-    print(scores)
     total_cards = lookup(scores)
     # multiplier = defaultdict(lambda: 1)
     # print(scores.items())
