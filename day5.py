@@ -13,7 +13,6 @@ def get_soil_map(split):
     src_start = int(soil_map[1])
     range_len = int(soil_map[2])
     soil_maps.append((dest_start, src_start, range_len))
-    print(soil_maps)
 
   return soil_maps, fertilizer_maps, water_maps, light_maps, tempareture_maps, humidity_maps, location_maps
 
@@ -100,74 +99,104 @@ def get_location_map(split):
    
 
 with open('input.txt') as f:
-    content = f.read()
-    split = re.split(": |:\n|\n\n|\n", content)
+  content = f.read()
+  split = re.split(": |:\n|\n\n|\n", content)
 
-    seeds = []
-    for seed in split[1].split():
-        seeds.append(int(seed))
+  seeds = []
+  for seed in split[1].split():
+      seeds.append(int(seed))
 
-    soil_maps, fertilizer_maps, water_maps, light_maps, tempareture_maps, humidity_maps, location_maps = get_soil_map(split[3:])
+  soil_maps, fertilizer_maps, water_maps, light_maps, tempareture_maps, humidity_maps, location_maps = get_soil_map(split[3:])
+  
+  print(fertilizer_maps)
+  
+  soils = []
+  for seed in seeds:
+    mapped = False
+    for (dest_start, src_start, range_len) in soil_maps:
+      if seed >= src_start and seed < src_start + range_len:
+        soils.append(dest_start + (seed - src_start) )
+        mapped = True
+        break
+    if not mapped:
+      soils.append(seed)
+  print(soils)
+    
+  fertilizers = []
+  for soil in soils:
+    mapped = False
+    for (dest_start, src_start, range_len) in fertilizer_maps:
+      if soil >= src_start and soil < src_start + range_len:
+        fertilizers.append(dest_start + (soil - src_start) )
+        mapped = True
+        break
+    if not mapped:
+      fertilizers.append(soil)
+  print(fertilizers)
 
-    soils, fertilizers, waters, lights, temperatures, humidities, locations = defaultdict(list), defaultdict(list), defaultdict(list), defaultdict(list), defaultdict(list), defaultdict(list), defaultdict(list)
-    for seed in tqdm(seeds):
-        for (dest_start, src_start, range_len) in tqdm(soil_maps):
-          for j, i in enumerate(range(src_start, src_start + range_len)):
-              if seed == i and dest_start + j:
-                soils[seed].append(dest_start + j)
-                break
-        if not seed in soils:
-          soils[seed].append(seed)
-
-        for (dest_start, src_start, range_len) in tqdm(fertilizer_maps):
-          for j, i in enumerate(range(src_start, src_start + range_len)):
-              if soils[seed][-1] == i:
-                fertilizers[seed].append(dest_start + j)
-                break
-          if not seed in fertilizers:
-            fertilizers[seed].append(soils[seed][-1])
-
-        for (dest_start, src_start, range_len) in tqdm(water_maps):
-          for j, i in enumerate(range(src_start, src_start + range_len)):
-              if fertilizers[seed][-1] == i:
-                waters[seed].append(dest_start + j)
-                break
-          if not seed in waters:
-            waters[seed].append(fertilizers[seed][-1])
-        
-        for (dest_start, src_start, range_len) in tqdm(light_maps):
-          for j, i in enumerate(range(src_start, src_start + range_len)):
-              if waters[seed][-1] == i:
-                lights[seed].append(dest_start + j)
-                break
-          if not seed in lights:
-            lights[seed].append(waters[seed][-1])
-        
-        for (dest_start, src_start, range_len) in tqdm(tempareture_maps):
-          for j, i in enumerate(range(src_start, src_start + range_len)):
-              if lights[seed][-1] == i:
-                temperatures[seed].append(dest_start + j)
-                break
-          if not seed in temperatures:
-            temperatures[seed].append(lights[seed][-1])
-        
-        for (dest_start, src_start, range_len) in tqdm(humidity_maps):
-          for j, i in enumerate(range(src_start, src_start + range_len)):
-              if temperatures[seed][-1] == i:
-                humidities[seed].append(dest_start + j)
-                break
-          if not seed in humidities:
-            humidities[seed].append(temperatures[seed][-1])
-        
-        for (dest_start, src_start, range_len) in tqdm(location_maps):
-          for j, i in enumerate(range(src_start, src_start + range_len)):
-              if humidities[seed][-1] == i:
-                locations[seed].append(dest_start + j)
-                break
-          if not seed in locations:
-            locations[seed].append(humidities[seed][-1])
-        
-    print(min(locations.values()))
-        
-            
-          
+  waters = []
+  for fertilizer in fertilizers:
+    mapped = False
+    for (dest_start, src_start, range_len) in water_maps:
+      if fertilizer >= src_start and fertilizer < src_start + range_len:
+        waters.append(dest_start + (fertilizer - src_start) )
+        mapped = True
+        break
+    if not mapped:
+      waters.append(fertilizer)
+  print(waters)
+  
+  lights = []
+  for water in waters:
+    mapped = False
+    for (dest_start, src_start, range_len) in light_maps:
+      if water >= src_start and water < src_start + range_len:
+        lights.append(dest_start + (water - src_start) )
+        mapped = True
+        break
+    if not mapped:
+      lights.append(water)
+      
+  print(lights)
+  
+  temperatures = []
+  for light in lights:
+    mapped = False
+    for (dest_start, src_start, range_len) in tempareture_maps:
+      if light >= src_start and light < src_start + range_len:
+        temperatures.append(dest_start + (light - src_start) )
+        mapped = True
+        break
+    if not mapped:
+      temperatures.append(light)
+      
+  print(temperatures)
+  
+  humidities = []
+  for temperature in temperatures:
+    mapped = False
+    for (dest_start, src_start, range_len) in humidity_maps:
+      if temperature >= src_start and temperature < src_start + range_len:
+        humidities.append(dest_start + (temperature - src_start) )
+        mapped = True
+        break
+    if not mapped:
+      humidities.append(temperature)
+      
+  print(humidities)
+  
+  locations = []
+  for humidity in humidities:
+    mapped = False
+    for (dest_start, src_start, range_len) in location_maps:
+      if humidity >= src_start and humidity < src_start + range_len:
+        locations.append(dest_start + (humidity - src_start) )
+        mapped = True
+        break
+    if not mapped:
+      locations.append(humidity)
+      
+  print(locations)
+  
+  print(min(locations))
+  
