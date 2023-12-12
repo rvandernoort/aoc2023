@@ -43,7 +43,7 @@ with open("input.txt") as f:
             if not skip:
                 correct.append(variation)
         
-        print(correct)
+        # print(correct)
         lengths.append(len(correct))
     print(sum(lengths))
         
